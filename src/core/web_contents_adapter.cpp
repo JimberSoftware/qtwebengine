@@ -1419,7 +1419,10 @@ void WebContentsAdapter::startDragging(QObject *dragSource, const content::DropD
                                        const QPoint &offset)
 {
     Q_D(WebContentsAdapter);
-    CHECK_INITIALIZED();
+
+
+
+ 
 
     if (d->currentDropData)
         return;
@@ -1434,7 +1437,7 @@ void WebContentsAdapter::startDragging(QObject *dragSource, const content::DropD
     d->currentDropAction = blink::kWebDragOperationNone;
     QDrag *drag = new QDrag(dragSource);    // will be deleted by Qt's DnD implementation
     bool dValid = true;
-    QMetaObject::Connection onDestroyed = QObject::connect(dragSource, &QObject::destroyed, [&dValid](){
+     QMetaObject::Connection onDestroyed = QObject::connect(dragSource, &QObject::destroyed, [&dValid](){
         dValid = false;
         QDrag::cancel();
     });
@@ -1451,11 +1454,11 @@ void WebContentsAdapter::startDragging(QObject *dragSource, const content::DropD
 
     {
         base::MessageLoop::ScopedNestableTaskAllower allow(base::MessageLoop::current());
-        drag->exec(allowedActions);
+     //   drag->exec(allowedActions);
     }
 
     QObject::disconnect(onDestroyed);
-    if (dValid) {
+  if (dValid) {
         if (d->webContents) {
             content::RenderViewHost *rvh = d->webContents->GetRenderViewHost();
             if (rvh) {
